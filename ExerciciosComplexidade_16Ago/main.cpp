@@ -11,7 +11,7 @@ pair<pair<float, float>, pair<float, float>> closest;
 
 vector<pair<float, float>> getSplit(vector<pair<float, float>> listPtn, float x, bool lowerUpper);
 void sortByX(vector<pair<float, float>> list);
-float divideAndConquer(vector<pair<float, float>> list);
+imAmDoneWithThis* divideAndConquer(vector<pair<float, float>> list);
 
 struct imAmDoneWithThis {
 	float distance;
@@ -35,19 +35,19 @@ void main() {
 	};
 
 	sortByX(listPairs);
-	float  minDistance = divideAndConquer(listPairs);
+	imAmDoneWithThis* minDistance = divideAndConquer(listPairs);
 	printf("Menor distancia: %.2f\n", minDistance);
 	printf("O par mais proximo eh: (%.2f, %.2f) - (%.2f, %.2f)\n", closest.first.first, closest.first.second, closest.second.first, closest.second.second);
 	cin >> out;
 
 }
 
-float divideAndConquer(vector<pair<float, float>> list) {
+imAmDoneWithThis* divideAndConquer(vector<pair<float, float>> list) {
 
 	float x1, x2;
 	float y1, y2;
 
-	if (list.size() <= 1) return INFINITO;
+	if (list.size() <= 1) return NULL;
 	if (list.size() == 2) {
 		x1 = list.at(0).first;
 		x2 = list.at(1).first;
@@ -55,12 +55,15 @@ float divideAndConquer(vector<pair<float, float>> list) {
 		y1 = list.at(0).first;
 		y2 = list.at(1).first;
 
-		closest = make_pair(list.at(0), list.at(1));
-
-		return (pow((x1 - x2), 2) + pow((y1 - y2), 2));
+		imAmDoneWithThis* composition;
+		composition->closest = make_pair(list.at(0), list.at(1));
+		composition->distance = (pow((x1 - x2), 2) + pow((y1 - y2), 2));
+		return composition;
 	}
 	
-	float d1, d2, d3;
+	imAmDoneWithThis* d1;
+	imAmDoneWithThis* d2;
+	imAmDoneWithThis* d3;
 
 	int n = list.size() / 2;
 	vector<pair<float, float>> p1(list.begin(), list.begin() + n);
@@ -73,7 +76,20 @@ float divideAndConquer(vector<pair<float, float>> list) {
 	// d3 = calcula d considerando P1[n-1] e P2[0]; // pontos entre as partições!
 	pair<float, float> lastP1 = p1.at(p1.size() - 1);
 	pair<float, float> firstP2 = p2.at(0);
-	d3 = (pow((lastP1.first + firstP2.first), 2) + pow((lastP1.second + firstP2.second), 2));
+	
+	d3->closest = make_pair(lastP1, firstP2);
+	d3->distance = (pow((lastP1.first + firstP2.first), 2) + pow((lastP1.second + firstP2.second), 2));
+
+	imAmDoneWithThis* exit;
+
+	if (d1) {
+		if (d1->distance < d3->distance)
+			exit = d1;
+		else
+			exit = d3;
+	}
+	
+	
 
 	return min(min(d1, d2), d3);
 
